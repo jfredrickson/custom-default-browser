@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# Open work links in Chrome and all others in Firefox
+
+WORK_DESKTOP_PATTERN="10\|11\|12"
+CHROME_COMMAND="/usr/bin/google-chrome-stable"
+FIREFOX_COMMAND="/usr/bin/firefox"
+
+if wmctrl -d | grep -q "\*.*${WORK_DESKTOP_PATTERN}$" ; then
+  $CHROME_COMMAND ${*}
+else
+  $FIREFOX_COMMAND ${*}
+fi
