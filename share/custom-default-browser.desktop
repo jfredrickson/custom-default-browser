@@ -4,6 +4,6 @@ Version=1.0
 Terminal=false
 Type=Application
 Name=Web Browser
-Exec=custom-default-browser
+Exec=custom-default-browser %u
 Icon=web-browser
 MimeType=x-scheme-handler/unknown;x-scheme-handler/about;x-scheme-handler/https;x-scheme-handler/http;text/html;
