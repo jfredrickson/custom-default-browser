@@ -1,12 +1,24 @@
 #!/usr/bin/env bash
 # Open work links in Chrome and all others in Firefox
 
-WORK_DESKTOP_PATTERN="10\|11\|12"
+WORK_WORKSPACE_PATTERN="(8|9|10)"
 CHROME_COMMAND="/usr/bin/google-chrome-stable"
 FIREFOX_COMMAND="/usr/bin/firefox"
 
-if wmctrl -d | grep -q "\*.*${WORK_DESKTOP_PATTERN}$" ; then
-  $CHROME_COMMAND ${*}
+if [ "$XDG_SESSION_TYPE" == "x11" ] ; then
+  if wmctrl -d | grep -Eq "\*.*${WORK_DESKTOP_PATTERN}$" ; then
+    $CHROME_COMMAND "${*}"
+  else
+    $FIREFOX_COMMAND "${*}"
+  fi
+elif [ "$XDG_SESSION_TYPE" == "wayland" ] ; then
+  CURRENT_WORKSPACE=`swaymsg -t get_workspaces | jq '.[] | select(.focused) | .num'`
+  if [[ $CURRENT_WORKSPACE =~ $WORK_WORKSPACE_PATTERN ]] ; then
+    $CHROME_COMMAND "${*}"
+  else
+    $FIREFOX_COMMAND "${*}"
+  fi
 else
-  $FIREFOX_COMMAND ${*}
+  echo "Dunno how to find the workspace"
 fi
+
